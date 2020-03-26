@@ -37,3 +37,23 @@ map.addControl(geolocate, 'top-left')
 geolocate.on('geolocate', function(event) {
 
 })
+
+map.on('click', function(event) {
+    let features = map.queryRenderedFeatures({ layers: ['rat-sightings'] })
+    console.log(features)
+    let current_location = [event.lngLat.lng, event.lngLat.lat]
+    console.log("Click location:", current_location)
+      if (features.length == 0) return
+      let closest_distance = Infinity
+    let closest_feature = null
+     for (let feature of features) {
+         let distance = turf.distance(turf.point(feature.geometry.coordinates), turf.point(current_location))
+          if (distance < closest_distance) {
+            closest_distance = distance
+            closest_feature = feature
+        }        
+
+    }
+     console.log("Closest feature:", closest_feature.geometry.coordinates, "(", closest_distance, "m)")
+     })
+
