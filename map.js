@@ -4,7 +4,7 @@ mapboxgl.accessToken = "pk.eyJ1IjoidGFuaGFpbHVuIiwiYSI6ImNrN3h5NDVjcDAweGYzbG83Y
 
 let map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/basic-v9',
+    style: 'mapbox://styles/tanhailun/ck880mxdp172b1iprh36uv16z',
     center: [-73.96024, 40.80877],
     zoom: 16
 })
@@ -44,16 +44,26 @@ map.on('click', function(event) {
     let current_location = [event.lngLat.lng, event.lngLat.lat]
     console.log("Click location:", current_location)
       if (features.length == 0) return
-      let closest_distance = Infinity
+    let closest_distance = Infinity
     let closest_feature = null
-     for (let feature of features) {
-         let distance = turf.distance(turf.point(feature.geometry.coordinates), turf.point(current_location))
-          if (distance < closest_distance) {
+       for (let feature of features) {
+        let distance = turf.distance(turf.point(feature.geometry.coordinates), turf.point(current_location))
+                if (distance < closest_distance) {
             closest_distance = distance
             closest_feature = feature
         }        
 
     }
-     console.log("Closest feature:", closest_feature.geometry.coordinates, "(", closest_distance, "m)")
-     })
+    console.log("Closest feature:", closest_feature.geometry.coordinates, "(", closest_distance, "m)")
+
+    let bearing = turf.bearing(turf.point(current_location), turf.point(closest_feature.geometry.coordinates))
+    console.log("Bearing:", bearing)
+    
+var pointer = document.getElementById('pointer')
+    pointer.style.transform = 'rotate(' + bearing + 'deg)'
+
+    map.flyTo({ center: current_location })
+
+    })
+
 
